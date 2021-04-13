@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    propertiesvolume:
+      prefixed: false
+      paths: /mnt/secrets/ia
+      aliases:
+        s2s-secret: IA_S2S_SECRET
+        s2s-microservice: IA_S2S_MICROSERVICE
+        AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key

@@ -1,5 +1,9 @@
 variable "product" {}
 
+variable "raw_product" {
+  default = "ia"
+}
+
 variable "component" {}
 
 variable "location" {
@@ -13,5 +17,9 @@ variable "subscription" {}
 variable "deployment_namespace" {}
 
 variable "common_tags" {
-  type = "map"
+  type = map(string)
+}
+
+variable "postgresql_user" {
+  default = "ia_tes"
 }
