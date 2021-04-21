@@ -1,0 +1,5 @@
+idam:
+  s2s-authorised:
+    services: ia
+ccdGatewayUrl: ${CCD_GW_URL:http://localhost:3453}
+
