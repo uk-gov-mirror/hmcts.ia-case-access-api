@@ -7,7 +7,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.FunctionalTest;
 
-public class SupplementaryDetailsFunctionTest extends FunctionalTest {
+public class SupplementaryDetailsResponseFunctionTest extends FunctionalTest {
 
     @Test
     public void should_allow_unauthorized_requests_and_return_401_response_code() {
