@@ -12,17 +12,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class SupplementaryInformation {
+public class SupplementaryInfo {
 
-    private String ccdCcaseNumber;
-    private SupplementaryInformationSurname informationSurname;
-
-    public void setCcdCcaseNumber(String ccdCcaseNumber) {
-        this.ccdCcaseNumber = ccdCcaseNumber;
-    }
-
-    public void setInformationSurname(SupplementaryInformationSurname informationSurname) {
-        this.informationSurname = informationSurname;
-    }
+    private String ccdCaseNumber;
+    private SupplementaryDetails informationSurname;
 
 }

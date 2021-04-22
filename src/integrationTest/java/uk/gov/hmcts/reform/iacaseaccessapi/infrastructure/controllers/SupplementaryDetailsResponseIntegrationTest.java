@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.SpringBootIntegrationTest;
 
-public class SupplementaryDetailsIntegrationTest extends SpringBootIntegrationTest {
+public class SupplementaryDetailsResponseIntegrationTest extends SpringBootIntegrationTest {
 
     @Test
     public void supplementaryDetailsEndpoint() throws Exception {

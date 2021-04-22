@@ -12,14 +12,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.MissingSupplementaryInfo;
+import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.MissingSupplementaryInfo;
+import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.SupplementaryDetailsResponse;
+import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryInfo;
 import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryDetails;
-import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryInformation;
-import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryInformationSurname;
-import uk.gov.hmcts.reform.iacaseaccessapi.domain.services.CcdSupplementaryDetailsSearchService;
+import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.service.CcdSupplementaryDetailsSearchService;
 
 @ExtendWith(MockitoExtension.class)
-class SupplementaryDetailsControllerTest {
+class SupplementaryDetailsResponseControllerTest {
 
     @Mock
     private CcdSupplementaryDetailsSearchService ccdSupplementaryDetailsSearchService;
@@ -41,22 +41,23 @@ class SupplementaryDetailsControllerTest {
     @Test
     void should_return_supplementary_details_complete_on_request() {
 
-        List<SupplementaryInformation> supplementaryInfo = new ArrayList<SupplementaryInformation>();
-        SupplementaryInformation supplementaryInformation = new SupplementaryInformation();
-        SupplementaryInformationSurname supplementaryInformationSurname = new SupplementaryInformationSurname("John");
+        List<SupplementaryInfo> supplementaryInfo = new ArrayList<SupplementaryInfo>();
+        SupplementaryInfo supplementaryInformation = new SupplementaryInfo();
+        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("John");
 
         ccdCaseNumberList.forEach((ccdCaseNumber) -> {
             supplementaryInformation.setCcdCcaseNumber(ccdCaseNumber);
-            supplementaryInformation.setInformationSurname(supplementaryInformationSurname);
+            supplementaryInformation.setInformationSurname(supplementaryDetails);
             supplementaryInfo.add(supplementaryInformation);
         });
 
-        SupplementaryDetails supplementaryDetails = new SupplementaryDetails();
-        supplementaryDetails.setSupplementaryInfo(supplementaryInfo);
+        SupplementaryDetailsResponse supplementaryDetailsResponse = new SupplementaryDetailsResponse();
+        supplementaryDetailsResponse.setSupplementaryInfo(supplementaryInfo);
 
-        when(ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList)).thenReturn(supplementaryDetails);
+        when(ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList)).thenReturn(
+            supplementaryDetailsResponse);
 
-        ResponseEntity<SupplementaryDetails> response = supplementaryDetailsController.post(ccdCaseNumberList);
+        ResponseEntity<SupplementaryDetailsResponse> response = supplementaryDetailsController.post(ccdCaseNumberList);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(ccdCaseNumberList.size(), response.getBody().getSupplementaryInfo().size());
@@ -68,9 +69,9 @@ class SupplementaryDetailsControllerTest {
     @Test
     void should_return_supplementary_details_partial_on_request() {
 
-        List<SupplementaryInformation> supplementaryInfo = new ArrayList<SupplementaryInformation>();
-        SupplementaryInformation supplementaryInformation = new SupplementaryInformation();
-        SupplementaryInformationSurname supplementaryInformationSurname = new SupplementaryInformationSurname("John");
+        List<SupplementaryInfo> supplementaryInfo = new ArrayList<SupplementaryInfo>();
+        SupplementaryInfo supplementaryInformation = new SupplementaryInfo();
+        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("John");
 
         List<String>  missingCcdCaseNumberList = new ArrayList<String>();
         MissingSupplementaryInfo missingSupplementaryInfo = new MissingSupplementaryInfo();
@@ -79,7 +80,7 @@ class SupplementaryDetailsControllerTest {
         while (count < ccdCaseNumberList.size()) {
             if (count == 0) {
                 supplementaryInformation.setCcdCcaseNumber(ccdCaseNumberList.get(count));
-                supplementaryInformation.setInformationSurname(supplementaryInformationSurname);
+                supplementaryInformation.setInformationSurname(supplementaryDetails);
                 supplementaryInfo.add(supplementaryInformation);
             } else {
                 missingCcdCaseNumberList.add(ccdCaseNumberList.get(count));
@@ -88,14 +89,15 @@ class SupplementaryDetailsControllerTest {
             count++;
         }
 
-        SupplementaryDetails supplementaryDetails = new SupplementaryDetails();
-        supplementaryDetails.setSupplementaryInfo(supplementaryInfo);
-        supplementaryDetails.setMissingSupplementaryInfo(missingSupplementaryInfo);
+        SupplementaryDetailsResponse supplementaryDetailsResponse = new SupplementaryDetailsResponse();
+        supplementaryDetailsResponse.setSupplementaryInfo(supplementaryInfo);
+        supplementaryDetailsResponse.setMissingSupplementaryInfo(missingSupplementaryInfo);
 
 
-        when(ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList)).thenReturn(supplementaryDetails);
+        when(ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList)).thenReturn(
+            supplementaryDetailsResponse);
 
-        ResponseEntity<SupplementaryDetails> response = supplementaryDetailsController.post(ccdCaseNumberList);
+        ResponseEntity<SupplementaryDetailsResponse> response = supplementaryDetailsController.post(ccdCaseNumberList);
 
         assertEquals(HttpStatus.PARTIAL_CONTENT, response.getStatusCode());
         assertEquals(1, response.getBody().getSupplementaryInfo().size());
@@ -107,14 +109,15 @@ class SupplementaryDetailsControllerTest {
     @Test
     void should_return_no_supplementary_details_on_request() {
 
-        List<SupplementaryInformation> supplementaryInfo = new ArrayList<SupplementaryInformation>();
+        List<SupplementaryInfo> supplementaryInfo = new ArrayList<SupplementaryInfo>();
 
-        SupplementaryDetails supplementaryDetails = new SupplementaryDetails();
-        supplementaryDetails.setSupplementaryInfo(supplementaryInfo);
+        SupplementaryDetailsResponse supplementaryDetailsResponse = new SupplementaryDetailsResponse();
+        supplementaryDetailsResponse.setSupplementaryInfo(supplementaryInfo);
 
-        when(ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList)).thenReturn(supplementaryDetails);
+        when(ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList)).thenReturn(
+            supplementaryDetailsResponse);
 
-        ResponseEntity<SupplementaryDetails> response = supplementaryDetailsController.post(ccdCaseNumberList);
+        ResponseEntity<SupplementaryDetailsResponse> response = supplementaryDetailsController.post(ccdCaseNumberList);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(0, response.getBody().getSupplementaryInfo().size());
@@ -123,14 +126,15 @@ class SupplementaryDetailsControllerTest {
     @Test
     void should_return_forbidden_on_request() {
 
-        List<SupplementaryInformation> supplementaryInfo = null;
+        List<SupplementaryInfo> supplementaryInfo = null;
 
-        SupplementaryDetails supplementaryDetails = new SupplementaryDetails();
-        supplementaryDetails.setSupplementaryInfo(supplementaryInfo);
+        SupplementaryDetailsResponse supplementaryDetailsResponse = new SupplementaryDetailsResponse();
+        supplementaryDetailsResponse.setSupplementaryInfo(supplementaryInfo);
 
-        when(ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList)).thenReturn(supplementaryDetails);
+        when(ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList)).thenReturn(
+            supplementaryDetailsResponse);
 
-        ResponseEntity<SupplementaryDetails> response = supplementaryDetailsController.post(ccdCaseNumberList);
+        ResponseEntity<SupplementaryDetailsResponse> response = supplementaryDetailsController.post(ccdCaseNumberList);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
@@ -138,7 +142,7 @@ class SupplementaryDetailsControllerTest {
     @Test
     void should_return_unauthorised_on_request() {
 
-        ResponseEntity<SupplementaryDetails> response = supplementaryDetailsController.post(ccdCaseNumberList);
+        ResponseEntity<SupplementaryDetailsResponse> response = supplementaryDetailsController.post(ccdCaseNumberList);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }

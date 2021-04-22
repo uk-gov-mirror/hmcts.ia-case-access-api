@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 
+import static java.util.Collections.emptyList;
 import static org.springframework.http.ResponseEntity.*;
 
 import io.swagger.annotations.*;
@@ -11,17 +12,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryDetails;
-import uk.gov.hmcts.reform.iacaseaccessapi.domain.services.CcdSupplementaryDetailsSearchService;
+import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryInfo;
+import uk.gov.hmcts.reform.iacaseaccessapi.domain.services.SupplementaryDetailsService;
+import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.MissingSupplementaryInfo;
+import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.SupplementaryDetailsRequest;
+import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.SupplementaryDetailsResponse;
+import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.service.CcdSupplementaryDetailsSearchService;
 
 @Slf4j
 @RestController
 public class SupplementaryDetailsController {
 
-    private CcdSupplementaryDetailsSearchService ccdSupplementaryDetailsSearchService;
+    private SupplementaryDetailsService supplementaryDetailsService;
 
-    public SupplementaryDetailsController(CcdSupplementaryDetailsSearchService ccdSupplementaryDetailsSearchService) {
-        this.ccdSupplementaryDetailsSearchService = ccdSupplementaryDetailsSearchService;
+    public SupplementaryDetailsController(SupplementaryDetailsService supplementaryDetailsService) {
+        this.supplementaryDetailsService = supplementaryDetailsService;
     }
 
     @ApiOperation(
@@ -29,7 +34,6 @@ public class SupplementaryDetailsController {
         response = String.class,
         authorizations =
             {
-                @Authorization(value = "Authorization"),
                 @Authorization(value = "ServiceAuthorization")
             }
     )
@@ -62,36 +66,50 @@ public class SupplementaryDetailsController {
         )
     })
     @PostMapping(path = "/supplementary-details")
-    public ResponseEntity<SupplementaryDetails> post(@RequestBody List<String>  ccdCaseNumberList) {
+    public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
 
-        if (ccdCaseNumberList == null
-            || ccdCaseNumberList.isEmpty()) {
+        if (supplementaryDetailsRequest == null
+            || supplementaryDetailsRequest.getCcdCaseNumbers() == null) {
             return badRequest().build();
         }
 
+        List<String> ccdCaseNumberList = supplementaryDetailsRequest.getCcdCaseNumbers();
         log.info("Request ccdNumberList:"
             + ccdCaseNumberList.stream().collect(Collectors.joining(",")));
 
-        SupplementaryDetails supplementaryDetails = ccdSupplementaryDetailsSearchService.getCcdSupplementaryDetails(ccdCaseNumberList);
+        try{
 
-        if (supplementaryDetails == null) {
-            return status(HttpStatus.UNAUTHORIZED).body(supplementaryDetails);
+            List<SupplementaryInfo> supplementaryInfo = supplementaryDetailsService
+                .getSupplementaryDetails(ccdCaseNumberList);
+            SupplementaryDetailsResponse supplementaryDetailsResponse = new SupplementaryDetailsResponse(
+                supplementaryInfo, missingSupplementaryDetailsInfo(ccdCaseNumberList, supplementaryInfo));
 
-        } else if (supplementaryDetails.getSupplementaryInfo() == null) {
-            return status(HttpStatus.FORBIDDEN).body(supplementaryDetails);
+            if (supplementaryDetailsResponse.getSupplementaryInfo() == null) {
+                return status(HttpStatus.FORBIDDEN).body(supplementaryDetailsResponse);
 
-        } else if (supplementaryDetails.getSupplementaryInfo().isEmpty()) {
-            return status(HttpStatus.NOT_FOUND).body(supplementaryDetails);
+            } else if (supplementaryDetailsResponse.getSupplementaryInfo().isEmpty()) {
+                return status(HttpStatus.NOT_FOUND).body(supplementaryDetailsResponse);
 
-        } else if (supplementaryDetails.getSupplementaryInfo().size() < ccdCaseNumberList.size()) {
-            return status(HttpStatus.PARTIAL_CONTENT).body(supplementaryDetails);
+            } else if (supplementaryDetailsResponse.getSupplementaryInfo().size() < ccdCaseNumberList.size()) {
+                return status(HttpStatus.PARTIAL_CONTENT).body(supplementaryDetailsResponse);
 
-        } else if (supplementaryDetails.getSupplementaryInfo().size() == ccdCaseNumberList.size()) {
-            return status(HttpStatus.OK).body(supplementaryDetails);
+            } else if (supplementaryDetailsResponse.getSupplementaryInfo().size() == ccdCaseNumberList.size()) {
+                return status(HttpStatus.OK).body(supplementaryDetailsResponse);
 
-        } else {
-            return status(HttpStatus.INTERNAL_SERVER_ERROR).body(supplementaryDetails);
+            } else {
+                return status(HttpStatus.INTERNAL_SERVER_ERROR).body(supplementaryDetailsResponse);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+
+    }
+
+    private MissingSupplementaryInfo missingSupplementaryDetailsInfo(List<String> ccdCaseNumberList, List<SupplementaryInfo> supplementaryInfo) {
+
+        // TODO implement correct solution
+        return new MissingSupplementaryInfo(emptyList());
     }
 
 }

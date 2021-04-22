@@ -1,4 +1,5 @@
-package uk.gov.hmcts.reform.iacaseaccessapi.domain.entities;
+package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -7,12 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class SupplementaryInformationSurname {
+public class MissingSupplementaryInfo {
 
-    private String surname;
+    private List<String> ccdCaseNumbers;
+
 }
