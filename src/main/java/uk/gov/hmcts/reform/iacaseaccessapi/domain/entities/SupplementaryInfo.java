@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class SupplementaryInfo {
 
     private String ccdCaseNumber;
-    private SupplementaryDetails informationSurname;
+    private SupplementaryDetails supplementaryDetails;
 
 }

@@ -30,8 +30,8 @@ class CcdSupplementaryDetailsSearchServiceTest {
 
         assertEquals(2, supplementaryInfoList.size());
         assertEquals("11111111111111", supplementaryInfoList.get(0).getCcdCaseNumber());
-        assertEquals("Johnson", supplementaryInfoList.get(0).getInformationSurname().getSurname());
+        assertEquals("Johnson", supplementaryInfoList.get(0).getSupplementaryDetails().getSurname());
         assertEquals("22222222222222", supplementaryInfoList.get(1).getCcdCaseNumber());
-        assertEquals("Johnson", supplementaryInfoList.get(1).getInformationSurname().getSurname());
+        assertEquals("Johnson", supplementaryInfoList.get(1).getSupplementaryDetails().getSurname());
     }
 }

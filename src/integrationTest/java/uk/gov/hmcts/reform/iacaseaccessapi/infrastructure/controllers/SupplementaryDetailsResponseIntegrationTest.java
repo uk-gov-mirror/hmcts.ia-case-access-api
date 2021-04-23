@@ -39,8 +39,8 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     private String getResponseData() {
         return
             "{\"supplementary_info\":["
-            + "{\"ccd_case_number\":\"11111111111111\",\"information_surname\":{\"surname\":\"Johnson\"}},"
-            + "{\"ccd_case_number\":\"22222222222222\",\"information_surname\":{\"surname\":\"Johnson\"}}],"
+            + "{\"ccd_case_number\":\"11111111111111\",\"supplementary_details\":{\"surname\":\"Johnson\"}},"
+            + "{\"ccd_case_number\":\"22222222222222\",\"supplementary_details\":{\"surname\":\"Johnson\"}}],"
             + "\"missing_supplementary_info\":{\"ccd_case_numbers\":[\"99999999999999\"]}}";
     }
 
