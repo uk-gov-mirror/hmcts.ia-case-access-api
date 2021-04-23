@@ -24,6 +24,7 @@ class SupplementaryDetailsResponseControllerTest {
     @Mock
     private CcdSupplementaryDetailsSearchService ccdSupplementaryDetailsSearchService;
 
+    private final String serviceAuthorization = "authorisation";
     private SupplementaryDetailsController supplementaryDetailsController;
     private ArrayList<String> ccdCaseNumberList = new ArrayList<String>();
 
