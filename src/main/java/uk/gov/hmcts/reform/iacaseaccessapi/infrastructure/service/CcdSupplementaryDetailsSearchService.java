@@ -16,7 +16,6 @@ import uk.gov.hmcts.reform.iacaseaccessapi.domain.services.SupplementaryDetailsS
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.CoreCaseDataApi;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.Query;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.ccd.CaseDetails;
-import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.ccd.SearchResult;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.security.SystemTokenGenerator;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.security.oauth2.IdentityManagerResponseException;
 
@@ -41,7 +40,7 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
     public List<SupplementaryInfo> getSupplementaryDetails(List<String>  ccdCaseNumberList,String authorisation) {
 
         logger.info("CcdSupplementaryDetailsSearchService : getSupplementaryDetails fetch data at {} for the case ids  {} ",
-                    LocalDateTime.now(), ccdCaseNumberList.toString());
+                    LocalDateTime.now(), ccdCaseNumberList);
 
         String userToken;
 
@@ -53,14 +52,14 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
             throw new IdentityManagerResponseException(e.getMessage(), e);
         }
 
-        Query query = new Query(100, 0, ccdCaseNumberList);
+        var query = new Query(100, 0, ccdCaseNumberList);
 
         return search(userToken, authorisation, query);
     }
 
     private List<SupplementaryInfo> search(String userAuthorisation, String serviceAuthToken, Query query) {
 
-        SearchResult searchResult = coreCaseDataApi.searchCases(
+        var searchResult = coreCaseDataApi.searchCases(
             userAuthorisation,
             serviceAuthToken,
             CASE_TYPE_ID,

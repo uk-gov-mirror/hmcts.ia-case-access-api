@@ -69,7 +69,6 @@ public class SupplementaryDetailsController {
     public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest,
                                                              @RequestHeader("serviceAuthorization") String serviceAuthorization) {
 
-
         if (supplementaryDetailsRequest == null
             || supplementaryDetailsRequest.getCcdCaseNumbers() == null) {
             return badRequest().build();
@@ -81,21 +80,21 @@ public class SupplementaryDetailsController {
 
         List<String> ccdCaseNumberList = supplementaryDetailsRequest.getCcdCaseNumbers();
         log.info("Request ccdNumberList:"
-            + ccdCaseNumberList.stream().collect(Collectors.joining(",")));
+                 + ccdCaseNumberList.stream().collect(Collectors.joining(",")));
 
         try {
 
             SupplementaryDetailsResponse supplementaryDetailsResponse = null;
 
             List<SupplementaryInfo> supplementaryInfo = supplementaryDetailsService
-                .getSupplementaryDetails(ccdCaseNumberList,serviceAuthorization);
+                .getSupplementaryDetails(ccdCaseNumberList, serviceAuthorization);
 
             if (supplementaryInfo == null) {
                 return status(HttpStatus.FORBIDDEN).body(supplementaryDetailsResponse);
             }
 
             supplementaryDetailsResponse = new SupplementaryDetailsResponse(
-                    supplementaryInfo, missingSupplementaryDetailsInfo(ccdCaseNumberList, supplementaryInfo));
+                supplementaryInfo, missingSupplementaryDetailsInfo(ccdCaseNumberList, supplementaryInfo));
 
             if (supplementaryDetailsResponse.getSupplementaryInfo().isEmpty()) {
                 return status(HttpStatus.NOT_FOUND).body(supplementaryDetailsResponse);
