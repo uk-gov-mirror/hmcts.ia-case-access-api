@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.idam.Tok
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.FeignConfiguration;
 
 @FeignClient(
+    primary = false,
     name = "idam-api",
     url = "${idam.baseUrl}",
     configuration = FeignConfiguration.class
