@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryInfo;
 import uk.gov.hmcts.reform.iacaseaccessapi.domain.services.SupplementaryDetailsService;
@@ -20,6 +21,7 @@ import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.Supp
 @Slf4j
 @RestController
 public class SupplementaryDetailsController {
+
 
     private SupplementaryDetailsService supplementaryDetailsService;
 
@@ -32,7 +34,7 @@ public class SupplementaryDetailsController {
         response = String.class,
         authorizations =
             {
-                @Authorization(value = "ServiceAuthorization")
+                @Authorization(value = "serviceAuthorization")
             }
     )
     @ApiResponses({
@@ -64,11 +66,17 @@ public class SupplementaryDetailsController {
         )
     })
     @PostMapping(path = "/supplementary-details")
-    public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
+    public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest,
+                                                             @RequestHeader("serviceAuthorization") String serviceAuthorization) {
+
 
         if (supplementaryDetailsRequest == null
             || supplementaryDetailsRequest.getCcdCaseNumbers() == null) {
             return badRequest().build();
+        }
+
+        if (serviceAuthorization == null || "".equals(serviceAuthorization)) {
+            return status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         List<String> ccdCaseNumberList = supplementaryDetailsRequest.getCcdCaseNumbers();
@@ -80,7 +88,7 @@ public class SupplementaryDetailsController {
             SupplementaryDetailsResponse supplementaryDetailsResponse = null;
 
             List<SupplementaryInfo> supplementaryInfo = supplementaryDetailsService
-                .getSupplementaryDetails(ccdCaseNumberList);
+                .getSupplementaryDetails(ccdCaseNumberList,serviceAuthorization);
 
             if (supplementaryInfo == null) {
                 return status(HttpStatus.FORBIDDEN).body(supplementaryDetailsResponse);
