@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.Supp
 @RestController
 public class SupplementaryDetailsController {
 
+
     private SupplementaryDetailsService supplementaryDetailsService;
 
     public SupplementaryDetailsController(SupplementaryDetailsService supplementaryDetailsService) {
@@ -65,6 +66,7 @@ public class SupplementaryDetailsController {
     })
     @PostMapping(path = "/supplementary-details")
     public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
+
 
         if (supplementaryDetailsRequest == null
             || supplementaryDetailsRequest.getCcdCaseNumbers() == null) {
@@ -119,7 +121,7 @@ public class SupplementaryDetailsController {
             .filter(ccdNumber -> !ccdCaseNumbersFound.contains(ccdNumber))
             .collect(Collectors.toList());
 
-        return new MissingSupplementaryInfo(ccdCaseNumbersMissing);
+        return ccdCaseNumbersMissing.isEmpty() ? null : new MissingSupplementaryInfo(ccdCaseNumbersMissing);
     }
 
 }
