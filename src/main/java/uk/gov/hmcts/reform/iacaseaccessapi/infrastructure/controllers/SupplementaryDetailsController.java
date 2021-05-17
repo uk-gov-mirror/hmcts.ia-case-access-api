@@ -121,7 +121,7 @@ public class SupplementaryDetailsController {
             .filter(ccdNumber -> !ccdCaseNumbersFound.contains(ccdNumber))
             .collect(Collectors.toList());
 
-        return new MissingSupplementaryInfo(ccdCaseNumbersMissing);
+        return ccdCaseNumbersMissing.isEmpty() ? null : new MissingSupplementaryInfo(ccdCaseNumbersMissing);
     }
 
 }

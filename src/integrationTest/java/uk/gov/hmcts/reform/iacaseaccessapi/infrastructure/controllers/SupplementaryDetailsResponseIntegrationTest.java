@@ -39,8 +39,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
 
     private final String fullResponse = "{\"supplementary_info\":["
                                   + "{\"ccd_case_number\":\"1619513189387098\","
-                                  + "\"supplementary_details\":{\"surname\":\"Johnson\"}}],"
-                                  + "\"missing_supplementary_info\":{\"ccd_case_numbers\":[]}}";
+                                  + "\"supplementary_details\":{\"surname\":\"Johnson\"}}]}";
 
     private final String partialResponse = "{\"supplementary_info\":["
                                       + "{\"ccd_case_number\":\"1619513189387098\","

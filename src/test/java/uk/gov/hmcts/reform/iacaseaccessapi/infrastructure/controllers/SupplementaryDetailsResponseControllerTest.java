@@ -63,7 +63,7 @@ class SupplementaryDetailsResponseControllerTest {
         assertEquals(ccdCaseNumberList.size(), response.getBody().getSupplementaryInfo().size());
         assertEquals("11111111111111", response.getBody().getSupplementaryInfo().get(0).getCcdCaseNumber());
         assertEquals("Johnson", response.getBody().getSupplementaryInfo().get(0).getSupplementaryDetails().getSurname());
-        assertTrue(response.getBody().getMissingSupplementaryInfo().getCcdCaseNumbers().isEmpty());
+        assertNull(response.getBody().getMissingSupplementaryInfo());
     }
 
     @Test
