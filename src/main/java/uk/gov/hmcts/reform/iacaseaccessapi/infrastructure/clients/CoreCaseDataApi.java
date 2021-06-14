@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.ccd.SearchResult;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.FeignConfiguration;
 
-
 @FeignClient(
     name = "core-case-data-api",
     primary = false,
@@ -19,8 +18,7 @@ import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.FeignConfigurat
 )
 public interface CoreCaseDataApi {
 
-    @RequestMapping(
-        method = RequestMethod.POST,
+    @PostMapping(
         value = "/searchCases?ctid={caseType}",
         headers = CONTENT_TYPE + "=" + APPLICATION_JSON_VALUE
     )
@@ -30,5 +28,4 @@ public interface CoreCaseDataApi {
         @PathVariable("caseType") String caseType,
         @RequestBody String searchString
     );
-
 }
