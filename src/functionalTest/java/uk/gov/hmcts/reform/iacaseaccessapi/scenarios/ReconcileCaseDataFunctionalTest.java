@@ -124,6 +124,25 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
     }
 
     @Test
+    public void should_return_200_status_code_when_surname_retrieved_for_given_case_number_duplicated_ccd_ids() {
+
+        ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
+        ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
+        ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
+
+        cases = caseListAsString(ccdCaseNumbers, ",");
+
+        Response response = supplementaryDetails(
+            cases,
+            caseDataFixture.getS2sToken()
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+
+        assertThatCaseIsInState(caseDataFixture.getCaseId(), "appealSubmitted");
+    }
+
+    @Test
     public void should_return_206_status_code_when_partial_match_found_for_given_case_numbers() {
 
         ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
@@ -174,7 +193,8 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
                   + "]}")
             .post("/supplementary-details")
             .then()
-            .extract().response();
+            .extract()
+            .response();
     }
 
     private String caseListAsString(List<String> ccdCaseNumbers, String delimiter) {
