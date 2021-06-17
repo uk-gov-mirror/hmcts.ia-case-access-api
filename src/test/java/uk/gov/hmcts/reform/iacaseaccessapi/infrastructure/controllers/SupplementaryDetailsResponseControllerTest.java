@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,7 +63,55 @@ class SupplementaryDetailsResponseControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(ccdCaseNumberList.size(), response.getBody().getSupplementaryInfo().size());
         assertEquals("11111111111111", response.getBody().getSupplementaryInfo().get(0).getCcdCaseNumber());
-        assertEquals("Johnson", response.getBody().getSupplementaryInfo().get(0).getSupplementaryDetails().getSurname());
+        assertEquals(
+            "Johnson",
+            response.getBody().getSupplementaryInfo().get(0).getSupplementaryDetails().getSurname()
+        );
+        assertNull(response.getBody().getMissingSupplementaryInfo());
+    }
+
+    @Test
+    void should_return_supplementary_details_complete_on_request_duplicated_ccc_ids() {
+
+        ArrayList<String> ccdCaseNumberList = new ArrayList<String>();
+        ccdCaseNumberList.add("11111111111111");
+        ccdCaseNumberList.add("11111111111111");
+        ccdCaseNumberList.add("11111111111111");
+        ccdCaseNumberList.add("22222222222222");
+        ccdCaseNumberList.add("99999999999999");
+
+        List<SupplementaryInfo> supplementaryInfo = new ArrayList<SupplementaryInfo>();
+
+        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson");
+
+        ccdCaseNumberList.stream().distinct().forEach((ccdCaseNumber) -> {
+            SupplementaryInfo supplementaryInformation = new SupplementaryInfo(ccdCaseNumber, supplementaryDetails);
+            supplementaryInfo.add(supplementaryInformation);
+        });
+
+        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(
+            ccdCaseNumberList
+                .stream()
+                .distinct()
+                .collect(Collectors.toList()))
+        ).thenReturn(supplementaryInfo);
+
+        SupplementaryDetailsRequest supplementaryDetailsRequest = new SupplementaryDetailsRequest(ccdCaseNumberList);
+
+        ResponseEntity<SupplementaryDetailsResponse> response
+            = supplementaryDetailsController.post(supplementaryDetailsRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // after distinct it is 3 element list
+        assertEquals(3, response.getBody().getSupplementaryInfo().size());
+        assertEquals(
+            "11111111111111",
+            response.getBody().getSupplementaryInfo().get(0).getCcdCaseNumber()
+        );
+        assertEquals(
+            "Johnson",
+            response.getBody().getSupplementaryInfo().get(0).getSupplementaryDetails().getSurname()
+        );
         assertNull(response.getBody().getMissingSupplementaryInfo());
     }
 
@@ -87,7 +136,10 @@ class SupplementaryDetailsResponseControllerTest {
         assertEquals(HttpStatus.PARTIAL_CONTENT, response.getStatusCode());
         assertEquals(1, response.getBody().getSupplementaryInfo().size());
         assertEquals("11111111111111", response.getBody().getSupplementaryInfo().get(0).getCcdCaseNumber());
-        assertEquals("Johnson", response.getBody().getSupplementaryInfo().get(0).getSupplementaryDetails().getSurname());
+        assertEquals(
+            "Johnson",
+            response.getBody().getSupplementaryInfo().get(0).getSupplementaryDetails().getSurname()
+        );
         assertEquals(2, response.getBody().getMissingSupplementaryInfo().getCcdCaseNumbers().size());
         assertTrue(response.getBody().getMissingSupplementaryInfo().getCcdCaseNumbers().contains("22222222222222"));
         assertTrue(response.getBody().getMissingSupplementaryInfo().getCcdCaseNumbers().contains("99999999999999"));

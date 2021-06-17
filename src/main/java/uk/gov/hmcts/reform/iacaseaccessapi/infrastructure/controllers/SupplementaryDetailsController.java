@@ -73,7 +73,12 @@ public class SupplementaryDetailsController {
             return badRequest().build();
         }
 
-        List<String> ccdCaseNumberList = supplementaryDetailsRequest.getCcdCaseNumbers();
+        List<String> ccdCaseNumberList = supplementaryDetailsRequest
+            .getCcdCaseNumbers()
+            .stream()
+            .distinct()
+            .collect(Collectors.toList());
+
         log.info("Request ccdNumberList:"
             + ccdCaseNumberList.stream().collect(Collectors.joining(",")));
 
