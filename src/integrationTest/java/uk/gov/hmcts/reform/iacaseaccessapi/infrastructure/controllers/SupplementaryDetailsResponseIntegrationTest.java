@@ -13,10 +13,13 @@ import ru.lanwen.wiremock.ext.WiremockResolver;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.*;
 
 
-public class SupplementaryDetailsResponseIntegrationTest extends SpringBootIntegrationTest  implements WithServiceAuthStub, WithCoreCaseApiStub, WithIdamStub {
+public class SupplementaryDetailsResponseIntegrationTest extends SpringBootIntegrationTest implements WithServiceAuthStub, WithCoreCaseApiStub, WithIdamStub {
 
     @org.springframework.beans.factory.annotation.Value("classpath:ccd-search-result-response.json")
     private Resource resourceFile;
+
+    @org.springframework.beans.factory.annotation.Value("classpath:ccd-search-result-empty-surname-response.json")
+    private Resource emptySurnameResourceFile;
 
     @org.springframework.beans.factory.annotation.Value("classpath:ccd-search-result-missing-surname-response.json")
     private Resource missingSurnameResourceFile;
@@ -27,39 +30,46 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     @org.springframework.beans.factory.annotation.Value("classpath:ccd-search-result-error-response.json")
     private Resource errorResponseResourceFile;
 
-    private final String fullResponseRequest =  "{\"ccd_case_numbers\":["
-                                                + "\"1619513189387098\"]}";
+    private final String fullResponseRequest = "{\"ccd_case_numbers\":["
+                                               + "\"1619513189387098\"]}";
 
-    private final String partialResponseRequest =  "{\"ccd_case_numbers\":["
-                                                + "\"1619513189387098\","
-                                                + "\"22222222222222\","
-                                                + "\"99999999999999\"]}";
+    private final String partialResponseRequest = "{\"ccd_case_numbers\":["
+                                                  + "\"1619513189387098\","
+                                                  + "\"22222222222222\","
+                                                  + "\"99999999999999\"]}";
 
-    private final String emptyResponseRequest =  "{\"ccd_case_numbers\":["
+    private final String emptyResponseRequest = "{\"ccd_case_numbers\":["
                                                 + "\"1619513189387090\","
                                                 + "\"22222222222222\","
                                                 + "\"99999999999999\"]}";
 
-    private final String missingSurnameResponseRequest =  "{\"ccd_case_numbers\":["
-                                                          + "\"1619513189387099\"]}";
+    private final String emptySurnameResponseRequest = "{\"ccd_case_numbers\":["
+                                                         + "\"1619513189387099\"]}";
+
+    private final String missingSurnameResponseRequest = "{\"ccd_case_numbers\":["
+                                                         + "\"1619513189387099\"]}";
 
     private final String fullResponse = "{\"supplementary_info\":["
-                                  + "{\"ccd_case_number\":\"1619513189387098\","
-                                  + "\"supplementary_details\":{\"surname\":\"Johnson\"}}]}";
+                                        + "{\"ccd_case_number\":\"1619513189387098\","
+                                        + "\"supplementary_details\":{\"surname\":\"Johnson\"}}]}";
 
     private final String partialResponse = "{\"supplementary_info\":["
-                                      + "{\"ccd_case_number\":\"1619513189387098\","
-                                      + "\"supplementary_details\":{\"surname\":\"Johnson\"}}],"
-                                      + "\"missing_supplementary_info\":"
-                                      + "{\"ccd_case_numbers\":[\"22222222222222\",\"99999999999999\"]}}";
+                                           + "{\"ccd_case_number\":\"1619513189387098\","
+                                           + "\"supplementary_details\":{\"surname\":\"Johnson\"}}],"
+                                           + "\"missing_supplementary_info\":"
+                                           + "{\"ccd_case_numbers\":[\"22222222222222\",\"99999999999999\"]}}";
 
     private final String emptyResponse = "{\"supplementary_info\":[],"
-                                      + "\"missing_supplementary_info\":"
-                                    + "{\"ccd_case_numbers\":[\"1619513189387090\",\"22222222222222\",\"99999999999999\"]}}";
+                                         + "\"missing_supplementary_info\":"
+                                         + "{\"ccd_case_numbers\":[\"1619513189387090\",\"22222222222222\",\"99999999999999\"]}}";
+
+    private final String emptySurnameResponse = "{\"supplementary_info\":["
+                                                + "{\"ccd_case_number\":\"1619513189387099\","
+                                                + "\"supplementary_details\":{\"surname\":\"\"}}]}";
 
     private final String missingSurnameResponse = "{\"supplementary_info\":["
                                                   + "{\"ccd_case_number\":\"1619513189387099\","
-                                                  + "\"supplementary_details\":{\"surname\":\"\"}}]}";
+                                                  + "\"supplementary_details\":{\"surname\":\"null\"}}]}";
 
     void setup(WireMockServer server) {
         addUserInfoStub(server);
@@ -72,7 +82,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     public void should_return_200_status_code_for_full_response(
         @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
         setup(server);
-        addSearchStub(server,resourceFile);
+        addSearchStub(server, resourceFile);
 
         MvcResult postResponse = mockMvc
             .perform(
@@ -93,7 +103,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
         @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
 
         setup(server);
-        addSearchStub(server,resourceFile);
+        addSearchStub(server, resourceFile);
 
         MvcResult postResponse = mockMvc
             .perform(
@@ -114,7 +124,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
         @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
 
         setup(server);
-        addSearchStub(server,emptyResponseResourceFile);
+        addSearchStub(server, emptyResponseResourceFile);
         MvcResult postResponse = mockMvc
             .perform(
                 post("/supplementary-details")
@@ -134,7 +144,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
         @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
 
         setup(server);
-        addSearchStub(server,errorResponseResourceFile);
+        addSearchStub(server, errorResponseResourceFile);
         MvcResult postResponse = mockMvc
             .perform(
                 post("/supplementary-details")
@@ -149,10 +159,31 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     }
 
     @Test
+    public void should_return_200_status_code_for_empty_surname(
+        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
+        setup(server);
+        addSearchStub(server, emptySurnameResourceFile);
+
+        MvcResult postResponse = mockMvc
+            .perform(
+                post("/supplementary-details")
+                    .content(emptySurnameResponseRequest)
+                    .contentType("application/json")
+                    .header("Authorization", equalTo("Bearer " + IntegrationConstants.USER_TOKEN))
+                    .header("ServiceAuthorization", equalTo("Bearer " + IntegrationConstants.SERVICE_TOKEN))
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+
+        assertEquals(emptySurnameResponse, postResponse.getResponse().getContentAsString());
+
+    }
+
+    @Test
     public void should_return_200_status_code_for_missing_surname(
         @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
         setup(server);
-        addSearchStub(server,missingSurnameResourceFile);
+        addSearchStub(server, missingSurnameResourceFile);
 
         MvcResult postResponse = mockMvc
             .perform(

@@ -1,9 +1,7 @@
 package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.service;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -41,17 +39,21 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
     }
 
     @Override
-    public List<SupplementaryInfo> getSupplementaryDetails(List<String>  ccdCaseNumberList) {
+    public List<SupplementaryInfo> getSupplementaryDetails(List<String> ccdCaseNumberList) {
 
-        log.info("CcdSupplementaryDetailsSearchService : getSupplementaryDetails fetch data for the case ids  {} ",
-                     ccdCaseNumberList.toString());
+        log.info(
+            "CcdSupplementaryDetailsSearchService : getSupplementaryDetails fetch data for the case ids  {} ",
+            ccdCaseNumberList.toString()
+        );
 
         String userToken;
         String s2sToken;
 
         try {
             userToken = "Bearer " + systemTokenGenerator.generate();
-            log.info("CcdSupplementaryDetailsSearchService : getSupplementaryDetails System user token has been generated.");
+            log.info(
+                "CcdSupplementaryDetailsSearchService : getSupplementaryDetails System user token has been generated."
+            );
 
             // returned token is already with Bearer prefix
             s2sToken = s2sAuthTokenGenerator.generate();
@@ -65,7 +67,7 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
         TermsQueryBuilder termQueryBuilder = QueryBuilders.termsQuery("reference", ccdCaseNumberList);
         searchSourceBuilder.size(100);
         searchSourceBuilder.from(0);
-        searchSourceBuilder.sort("created_date",SortOrder.DESC);
+        searchSourceBuilder.sort("created_date", SortOrder.DESC);
         searchSourceBuilder.query(termQueryBuilder);
 
         return search(userToken, s2sToken, searchSourceBuilder.toString());
@@ -83,7 +85,7 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
         if (searchResult.getCases() == null) {
             return Collections.emptyList();
         }
-        return  searchResult.getCases()
+        return searchResult.getCases()
             .stream()
             .filter(p -> p.getCaseData() != null && p.getId() != null)
             .map(this::extractSupplementaryInfo)
@@ -91,8 +93,9 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
     }
 
     private SupplementaryInfo extractSupplementaryInfo(CaseDetails caseDetails) {
-        Map<String, Object> tempData = new HashMap<>(caseDetails.getCaseData());
-        return new SupplementaryInfo(String.valueOf(caseDetails.getId()),
-                                     new SupplementaryDetails(tempData.get(APPELLANT_FAMILY_NAME).toString()));
+        return new SupplementaryInfo(
+            String.valueOf(caseDetails.getId()),
+            new SupplementaryDetails(String.valueOf(caseDetails.getCaseData().get(APPELLANT_FAMILY_NAME)))
+        );
     }
 }

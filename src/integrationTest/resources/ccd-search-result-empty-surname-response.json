@@ -12,7 +12,8 @@
       "last_state_modified_date": "2021-04-27T08:55:18.528",
       "security_classification": "PUBLIC",
       "case_data": {
-        "appellantGivenNames": "Ben"
+        "appellantGivenNames": "Ben",
+        "appellantFamilyName": ""
         }
       }
   ],
