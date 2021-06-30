@@ -17,7 +17,7 @@ management:
 
 spring:
   application:
-    name: Case Acces Api
+    name: IA Case Access API
   main:
     allow-bean-definition-overriding: true
   jackson.date-format: yyyy-MM-dd
