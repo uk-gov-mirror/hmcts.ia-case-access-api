@@ -10,3 +10,4 @@ zap-cli --zap-url http://0.0.0.0 -p 1001 alerts -l Medium --exit-code False
 mkdir -p functional-output/
 cp /zap/api-report.html functional-output/
 cp *.* functional-output/
+chmod -R 777 functional-output/
