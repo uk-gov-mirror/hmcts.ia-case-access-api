@@ -31,11 +31,6 @@ Functional tests use started application instance:
 ./gradlew bootRun
 ```
 
-There is special testing endpoint included in the code. It can be activated by changing Spring profile. Command to run:
-```
-SPRING_PROFILES_ACTIVE=test ./gradlew bootRun
-```
-
 ### Usage
 API details about usages and error statuses are placed in [Swagger UI](http://ia-case-access-api-aat.service.core-compute-aat.internal/swagger-ui.html)
 
@@ -43,7 +38,7 @@ API details about usages and error statuses are placed in [Swagger UI](http://ia
 ### Implementation
 `ia-case-access-api` has a single POST endpoint called `supplementary-details`. The payload is a list of CCD Case Ids.
 
-Authentication is defined as any other Reform application with Idam `Authorization` token and S2S `ServiceAuthorization` token.
+Authentication is defined as S2S `ServiceAuthorization` token.
 
 
 ## License
