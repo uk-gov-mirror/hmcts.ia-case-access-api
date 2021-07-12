@@ -3,11 +3,9 @@ package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 import static org.springframework.http.ResponseEntity.*;
 
 import io.swagger.annotations.*;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
