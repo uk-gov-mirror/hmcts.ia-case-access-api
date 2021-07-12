@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -175,4 +176,16 @@ class SupplementaryDetailsResponseControllerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
+    @Test
+    void should_return_ok_on_empty_list_on_request() {
+
+        SupplementaryDetailsRequest supplementaryDetailsRequest = new SupplementaryDetailsRequest(emptyList());
+
+        ResponseEntity<SupplementaryDetailsResponse> response
+            = supplementaryDetailsController.post(supplementaryDetailsRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(0, response.getBody().getSupplementaryInfo().size());
+
+    }
 }

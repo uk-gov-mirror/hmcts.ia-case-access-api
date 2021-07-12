@@ -3,8 +3,11 @@ package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 import static org.springframework.http.ResponseEntity.*;
 
 import io.swagger.annotations.*;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,8 +82,23 @@ public class SupplementaryDetailsController {
             .distinct()
             .collect(Collectors.toList());
 
+        if (ccdCaseNumberList.isEmpty()) {
+
+            log.info("Request ccdNumberList: is empty list");
+
+            return status(HttpStatus.OK).body(
+                new SupplementaryDetailsResponse(
+                    Collections.emptyList(),
+                    missingSupplementaryDetailsInfo(
+                        ccdCaseNumberList,
+                        Collections.emptyList()
+                    )
+                )
+            );
+        }
+
         log.info("Request ccdNumberList:"
-            + ccdCaseNumberList.stream().collect(Collectors.joining(",")));
+                 + ccdCaseNumberList.stream().collect(Collectors.joining(",")));
 
         try {
 
@@ -94,7 +112,7 @@ public class SupplementaryDetailsController {
             }
 
             supplementaryDetailsResponse = new SupplementaryDetailsResponse(
-                    supplementaryInfo, missingSupplementaryDetailsInfo(ccdCaseNumberList, supplementaryInfo));
+                supplementaryInfo, missingSupplementaryDetailsInfo(ccdCaseNumberList, supplementaryInfo));
 
             if (supplementaryDetailsResponse.getSupplementaryInfo().isEmpty()) {
                 return status(HttpStatus.NOT_FOUND).body(supplementaryDetailsResponse);
