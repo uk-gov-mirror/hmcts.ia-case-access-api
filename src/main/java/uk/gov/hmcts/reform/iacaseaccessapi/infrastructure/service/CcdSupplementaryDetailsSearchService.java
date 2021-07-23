@@ -65,6 +65,8 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         TermsQueryBuilder termQueryBuilder = QueryBuilders.termsQuery("reference", ccdCaseNumberList);
+        searchSourceBuilder.size(100);
+        searchSourceBuilder.from(0);
         searchSourceBuilder.sort("created_date", SortOrder.DESC);
         searchSourceBuilder.query(termQueryBuilder);
 
