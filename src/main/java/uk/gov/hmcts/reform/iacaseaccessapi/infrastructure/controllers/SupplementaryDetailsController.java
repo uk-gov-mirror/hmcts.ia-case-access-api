@@ -3,8 +3,8 @@ package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 import static org.springframework.http.ResponseEntity.*;
 
 import io.swagger.annotations.*;
+import java.util.*;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,8 +22,7 @@ import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.Supp
 @RestController
 public class SupplementaryDetailsController {
 
-
-    private SupplementaryDetailsService supplementaryDetailsService;
+    private final SupplementaryDetailsService supplementaryDetailsService;
 
     public SupplementaryDetailsController(SupplementaryDetailsService supplementaryDetailsService) {
         this.supplementaryDetailsService = supplementaryDetailsService;
@@ -67,7 +66,6 @@ public class SupplementaryDetailsController {
     })
     @PostMapping(path = "/supplementary-details")
     public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
-
 
         if (supplementaryDetailsRequest == null
             || supplementaryDetailsRequest.getCcdCaseNumbers() == null) {
@@ -126,6 +124,7 @@ public class SupplementaryDetailsController {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            Thread.currentThread().interrupt();
             return status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -144,5 +143,4 @@ public class SupplementaryDetailsController {
 
         return ccdCaseNumbersMissing.isEmpty() ? null : new MissingSupplementaryInfo(ccdCaseNumbersMissing);
     }
-
 }

@@ -25,10 +25,8 @@ class SupplementaryDetailsResponseControllerTest {
 
     @Mock
     private CcdSupplementaryDetailsSearchService ccdSupplementaryDetailsSearchService;
-
-    private final String serviceAuthorization = "authorisation";
     private SupplementaryDetailsController supplementaryDetailsController;
-    private ArrayList<String> ccdCaseNumberList = new ArrayList<String>();
+    private final ArrayList<String> ccdCaseNumberList = new ArrayList<>();
 
     @BeforeEach
     public void setUp() {
@@ -44,7 +42,7 @@ class SupplementaryDetailsResponseControllerTest {
     @Test
     void should_return_supplementary_details_complete_on_request() {
 
-        List<SupplementaryInfo> supplementaryInfo = new ArrayList<SupplementaryInfo>();
+        List<SupplementaryInfo> supplementaryInfo = new ArrayList<>();
 
         SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson");
 
@@ -74,14 +72,14 @@ class SupplementaryDetailsResponseControllerTest {
     @Test
     void should_return_supplementary_details_complete_on_request_duplicated_ccc_ids() {
 
-        ArrayList<String> ccdCaseNumberList = new ArrayList<String>();
+        ArrayList<String> ccdCaseNumberList = new ArrayList<>();
         ccdCaseNumberList.add("11111111111111");
         ccdCaseNumberList.add("11111111111111");
         ccdCaseNumberList.add("11111111111111");
         ccdCaseNumberList.add("22222222222222");
         ccdCaseNumberList.add("99999999999999");
 
-        List<SupplementaryInfo> supplementaryInfo = new ArrayList<SupplementaryInfo>();
+        List<SupplementaryInfo> supplementaryInfo = new ArrayList<>();
 
         SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson");
 
@@ -119,7 +117,7 @@ class SupplementaryDetailsResponseControllerTest {
     @Test
     void should_return_supplementary_details_partial_on_request() {
 
-        List<SupplementaryInfo> supplementaryInfo = new ArrayList<SupplementaryInfo>();
+        List<SupplementaryInfo> supplementaryInfo = new ArrayList<>();
 
         SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson");
 
@@ -186,6 +184,25 @@ class SupplementaryDetailsResponseControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, response.getBody().getSupplementaryInfo().size());
+    }
 
+    @Test
+    void should_return_bad_request_when_supplementary_details_request_is_null() {
+
+        ResponseEntity<SupplementaryDetailsResponse> response
+            = supplementaryDetailsController.post(null);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    void should_return_bad_request_when_ccd_case_number_list_is_null() {
+
+        SupplementaryDetailsRequest supplementaryDetailsRequest = new SupplementaryDetailsRequest(null);
+
+        ResponseEntity<SupplementaryDetailsResponse> response
+            = supplementaryDetailsController.post(supplementaryDetailsRequest);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }

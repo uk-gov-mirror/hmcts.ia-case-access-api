@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermsQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -29,48 +31,55 @@ class CcdSupplementaryDetailsSearchServiceTest {
 
     @Mock
     private CoreCaseDataApi coreCaseDataApi;
-
     @Mock
     private SystemTokenGenerator systemTokenGenerator;
     @Mock
     private AuthTokenGenerator s2sAuthTokenGenerator;
-
     @Mock
     private CaseDetails caseDetails;
-
     @Mock
     SearchResult searchResult;
 
     private CcdSupplementaryDetailsSearchService ccdSupplementaryDetailsSearchService;
+    private static final int MAX_RECORDS = 100;
+    private static final int THREAD_POOL_SIZE = 10;
     private final String authorisation = "Bearer token";
     private final String serviceToken = "Bearer serviceToken";
 
     private final String caseType = "Asylum";
     private final long caseId = 1234;
-    private final List<String> ccdCaseNumberList = Arrays.asList("11111111111111","22222222222222","99999999999999");
+    private final List<String> ccdCaseNumberList = Arrays.asList("11111111111111", "22222222222222", "99999999999999");
 
     SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-    private Map<String,Object> data = new HashMap<>();
+    private Map<String, Object> data = new HashMap<>();
+    private ExecutorService executorService;
 
     @BeforeEach
     public void setUp() {
         data = new HashMap<>();
-        data.put("appellantFamilyName","Johnson");
+        data.put("appellantFamilyName", "Johnson");
 
         TermsQueryBuilder termQueryBuilder = QueryBuilders.termsQuery("reference", ccdCaseNumberList);
-        searchSourceBuilder.size(100);
+        searchSourceBuilder.size(MAX_RECORDS);
         searchSourceBuilder.from(0);
-        searchSourceBuilder.sort("created_date",SortOrder.DESC);
+        searchSourceBuilder.sort("created_date", SortOrder.DESC);
         searchSourceBuilder.query(termQueryBuilder);
+
+        executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
         when(systemTokenGenerator.generate()).thenReturn("token");
         when(s2sAuthTokenGenerator.generate()).thenReturn(serviceToken);
 
         when(coreCaseDataApi.searchCases(authorisation, serviceToken, caseType,
-                                         searchSourceBuilder.toString())).thenReturn(searchResult);
+                                         searchSourceBuilder.toString()
+        )).thenReturn(searchResult);
 
-        ccdSupplementaryDetailsSearchService = new CcdSupplementaryDetailsSearchService(systemTokenGenerator, coreCaseDataApi,
-                                                                                        s2sAuthTokenGenerator
+        ccdSupplementaryDetailsSearchService = new CcdSupplementaryDetailsSearchService(
+            systemTokenGenerator,
+            coreCaseDataApi,
+            s2sAuthTokenGenerator,
+            executorService,
+            MAX_RECORDS
         );
     }
 
@@ -89,7 +98,6 @@ class CcdSupplementaryDetailsSearchServiceTest {
 
         verify(systemTokenGenerator).generate();
         verify(coreCaseDataApi).searchCases(authorisation, serviceToken, caseType, searchSourceBuilder.toString());
-
     }
 
     @Test
@@ -101,6 +109,5 @@ class CcdSupplementaryDetailsSearchServiceTest {
         assertEquals(0, supplementaryInfoList.size());
         verify(systemTokenGenerator).generate();
         verify(coreCaseDataApi).searchCases(authorisation, serviceToken, caseType, searchSourceBuilder.toString());
-
     }
 }
