@@ -36,6 +36,9 @@ health:
       uri: ${CCD_URL:http://127.0.0.1:4452}/health
       response: '"status":"UP"'
 
+requestPagination.maxRecords: 100
+executorService.threadPoolSize: 10
+
 security:
   anonymousPaths:
     - "/"
