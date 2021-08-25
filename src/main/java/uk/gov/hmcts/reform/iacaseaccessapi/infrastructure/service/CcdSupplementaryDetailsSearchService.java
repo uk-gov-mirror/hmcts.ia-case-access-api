@@ -35,15 +35,13 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
     private final SystemTokenGenerator systemTokenGenerator;
     private final AuthTokenGenerator s2sAuthTokenGenerator;
     private final int maxRecords;
+    private final ExecutorService executorService;
 
     @Autowired
-    @Qualifier("fixedThreadPool")
-    private ExecutorService executorService;
-
     public CcdSupplementaryDetailsSearchService(SystemTokenGenerator systemTokenGenerator,
                                                 CoreCaseDataApi coreCaseDataApi,
                                                 AuthTokenGenerator s2sAuthTokenGenerator,
-                                                ExecutorService executorService,
+                                                @Qualifier("fixedThreadPool") ExecutorService executorService,
                                                 @Value("${requestPagination.maxRecords}") int maxRecords
     ) {
         this.systemTokenGenerator = systemTokenGenerator;
