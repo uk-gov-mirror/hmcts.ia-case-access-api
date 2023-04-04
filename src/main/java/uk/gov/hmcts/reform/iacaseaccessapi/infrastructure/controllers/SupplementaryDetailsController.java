@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 
 import static org.springframework.http.ResponseEntity.*;
 
-import io.swagger.annotations.*;
+/*import io.swagger.annotations.*;*/
 import java.util.*;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ public class SupplementaryDetailsController {
         this.supplementaryDetailsService = supplementaryDetailsService;
     }
 
-    @ApiOperation(
+    /*@ApiOperation(
         value = "Handles 'supplementary-details' calls from Pay Hub",
         response = String.class,
         authorizations =
@@ -63,7 +63,7 @@ public class SupplementaryDetailsController {
             code = 500,
             message = "Unexpected or Run time exception."
         )
-    })
+    })*/
     @PostMapping(path = "/supplementary-details")
     public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
 

@@ -1,3 +1,4 @@
+/*
 package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -38,3 +39,4 @@ public class SwaggerConfiguration {
             );
     }
 }
+*/
