@@ -69,42 +69,6 @@ public class SupplementaryDetailsController {
             description = "Unexpected or Run time exception."
         )
     })
-    /*@ApiOperation(
-        value = "Handles 'supplementary-details' calls from Pay Hub",
-        response = String.class,
-        authorizations =
-            {
-                @Authorization(value = "ServiceAuthorization")
-            }
-    )
-    @ApiResponses({
-        @ApiResponse(
-            code = 200,
-            message = "Supplementary details completely retrieved.",
-            response = String.class
-        ),
-        @ApiResponse(
-            code = 206,
-            message = "Supplementary details partially retrieved.",
-            response = String.class
-        ),
-        @ApiResponse(
-            code = 401,
-            message = "Unauthorized - missing or invalid S2S token."
-        ),
-        @ApiResponse(
-            code = 403,
-            message = "Forbidden - system user does not have access to the resources."
-        ),
-        @ApiResponse(
-            code = 404,
-            message = "Supplementary details not found for all the case numbers given."
-        ),
-        @ApiResponse(
-            code = 500,
-            message = "Unexpected or Run time exception."
-        )
-    })*/
     @PostMapping(path = "/supplementary-details")
     public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
 
