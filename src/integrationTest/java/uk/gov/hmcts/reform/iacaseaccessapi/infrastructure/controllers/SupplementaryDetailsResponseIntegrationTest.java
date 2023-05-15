@@ -9,7 +9,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.lanwen.wiremock.ext.WiremockResolver;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.*;
 
 
@@ -79,8 +78,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     }
 
     @Test
-    public void should_return_200_status_code_for_full_response(
-        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
+    public void should_return_200_status_code_for_full_response() throws Exception {
         setup(server);
         addSearchStub(server, resourceFile);
 
@@ -99,8 +97,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     }
 
     @Test
-    public void should_return_206_status_code_for_partial_response(
-        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
+    public void should_return_206_status_code_for_partial_response() throws Exception {
 
         setup(server);
         addSearchStub(server, resourceFile);
@@ -120,8 +117,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     }
 
     @Test
-    public void should_return_404_status_code_for_not_found_response(
-        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
+    public void should_return_404_status_code_for_not_found_response() throws Exception {
 
         setup(server);
         addSearchStub(server, emptyResponseResourceFile);
@@ -140,8 +136,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     }
 
     @Test
-    public void should_return_400_status_code_for_error_response(
-        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
+    public void should_return_400_status_code_for_error_response() throws Exception {
 
         setup(server);
         addSearchStub(server, errorResponseResourceFile);
@@ -159,8 +154,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     }
 
     @Test
-    public void should_return_200_status_code_for_empty_surname(
-        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
+    public void should_return_200_status_code_for_empty_surname() throws Exception {
         setup(server);
         addSearchStub(server, emptySurnameResourceFile);
 
@@ -180,8 +174,7 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
     }
 
     @Test
-    public void should_return_200_status_code_for_missing_surname(
-        @WiremockResolver.Wiremock(factory = StaticPortWiremockFactory.class) WireMockServer server) throws Exception {
+    public void should_return_200_status_code_for_missing_surname() throws Exception {
         setup(server);
         addSearchStub(server, missingSurnameResourceFile);
 

@@ -14,7 +14,7 @@ public interface WithIdamStub {
         server.addStubMapping(
             new StubMapping(
                 newRequestPattern(RequestMethod.POST, urlEqualTo("/idam/o/token"))
-                    .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded;charset=UTF-8"))
+                    .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded; charset=UTF-8"))
                     .build(),
                 aResponse()
                     .withStatus(200)
