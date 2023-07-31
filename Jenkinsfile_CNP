@@ -22,6 +22,7 @@ def secrets = [
         secret('ia-system-access-password', 'IA_SYSTEM_ACCESS_PASSWORD'),
         secret('test-law-firm-a-username', 'TEST_LAW_FIRM_SHARE_CASE_A_USERNAME'),
         secret('test-law-firm-a-password', 'TEST_LAW_FIRM_SHARE_CASE_A_PASSWORD'),
+        secret('ia-config-validator-secret', 'IA_CONFIG_VALIDATOR_SECRET'),
         secret('app-insights-connection-string', 'app-insights-connection-string')
     ]
 ]
@@ -43,9 +44,9 @@ withPipeline(type, product, component) {
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
     env.CCD_GW_URL = "http://dm-store-aat.service.core-compute-aat.internal"
 
-    loadVaultSecrets(secrets)
     enableAksStagingDeployment()
     disableLegacyDeployment()
+    loadVaultSecrets(secrets)
 
     afterSuccess('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
