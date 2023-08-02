@@ -191,12 +191,6 @@ dependencyManagement {
       entry 'snakeyaml'
     }
 
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.73') {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-el'
-      entry 'tomcat-embed-websocket'
-    }
-
     // CVE-2018-10237 - Unbounded memory allocation
     dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'

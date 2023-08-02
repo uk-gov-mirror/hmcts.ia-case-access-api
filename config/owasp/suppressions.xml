@@ -44,7 +44,6 @@
          They should still be addressed -->
   <suppress until="2023-07-30">
      <cve>CVE-2023-35116</cve><!-- jackson-databind -->
-     <cve>CVE-2023-28709</cve><!-- tomcat -->
      <cve>CVE-2023-20873</cve>
      <cve>CVE-2023-20863</cve>
      <cve>CVE-2023-20861</cve>
