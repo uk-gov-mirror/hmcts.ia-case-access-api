@@ -13,7 +13,7 @@ plugins {
   id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.0'
-  id 'org.springframework.boot' version '2.7.11'
+  id 'org.springframework.boot' version '2.7.14'
   id 'uk.gov.hmcts.java' version '0.12.43'
   id 'org.owasp.dependencycheck' version '8.2.1'
   id 'com.github.ben-manes.versions' version '0.28.0'
@@ -204,18 +204,6 @@ dependencyManagement {
 
     dependencySet(group: 'commons-fileupload', version: '1.5') {
       entry 'commons-fileupload'
-    }
-
-    dependencySet(group: 'org.springframework.security', version: '5.7.5') {
-      entry 'spring-security-crypto'
-      entry 'spring-security-core'
-      entry 'spring-security-config'
-      entry 'spring-security-web'
-      entry 'spring-security-test'
-      entry 'spring-security-oauth2-client'
-      entry 'spring-security-oauth2-core'
-      entry 'spring-security-oauth2-jose'
-      entry 'spring-security-oauth2-resource-server'
     }
 
     //CVE-2021-42550
