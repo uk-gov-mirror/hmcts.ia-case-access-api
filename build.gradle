@@ -191,8 +191,7 @@ dependencyManagement {
       entry 'snakeyaml'
     }
 
-    // CVE-2018-10237 - Unbounded memory allocation
-    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
+    dependencySet(group: 'com.google.guava', version: '32.1.2-jre') {
       entry 'guava'
     }
 
