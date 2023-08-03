@@ -13,7 +13,7 @@ plugins {
   id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.0'
-  id 'org.springframework.boot' version '2.7.11'
+  id 'org.springframework.boot' version '2.7.14'
   id 'uk.gov.hmcts.java' version '0.12.43'
   id 'org.owasp.dependencycheck' version '8.2.1'
   id 'com.github.ben-manes.versions' version '0.28.0'
@@ -187,35 +187,16 @@ dependencyCheck {
 dependencyManagement {
   dependencies {
 
-    dependencySet(group: 'org.yaml', version: '1.33') {
+    dependencySet(group: 'org.yaml', version: '2.0') {
       entry 'snakeyaml'
     }
 
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.73') {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-el'
-      entry 'tomcat-embed-websocket'
-    }
-
-    // CVE-2018-10237 - Unbounded memory allocation
-    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
+    dependencySet(group: 'com.google.guava', version: '32.1.2-jre') {
       entry 'guava'
     }
 
     dependencySet(group: 'commons-fileupload', version: '1.5') {
       entry 'commons-fileupload'
-    }
-
-    dependencySet(group: 'org.springframework.security', version: '5.7.5') {
-      entry 'spring-security-crypto'
-      entry 'spring-security-core'
-      entry 'spring-security-config'
-      entry 'spring-security-web'
-      entry 'spring-security-test'
-      entry 'spring-security-oauth2-client'
-      entry 'spring-security-oauth2-core'
-      entry 'spring-security-oauth2-jose'
-      entry 'spring-security-oauth2-resource-server'
     }
 
     //CVE-2021-42550
@@ -230,7 +211,7 @@ dependencyManagement {
       entry 'log4j-to-slf4j'
     }
 
-    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.14.1') {
+    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.15.2') {
       entry 'jackson-databind'
       entry 'jackson-core'
     }
