@@ -52,12 +52,16 @@ withNightlyPipeline(type, product, component) {
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
     env.CCD_GW_URL = "http://dm-store-aat.service.core-compute-aat.internal"
 
-
     loadVaultSecrets(secrets)
 
+    enableFortifyScan()
     enableSecurityScan()
     enableMutationTest()
     enableSlackNotifications('#ia-tech')
     enableFullFunctionalTest()
+
+    after('fortify-scan') {
+      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+    }
 
 }
