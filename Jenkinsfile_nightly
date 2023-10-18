@@ -78,7 +78,6 @@ withNightlyPipeline(type, product, component) {
     }
 
     afterAlways('fullFunctionalTest') {
-      builder.gradle('jacocoTestReport')
       publishHTML([
         allowMissing         : true,
         alwaysLinkToLastBuild: true,
