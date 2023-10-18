@@ -183,18 +183,19 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
 
     private Response supplementaryDetails(String cases, String serviceToken) {
 
-        return given(requestSpecification)
+        Response response = given(requestSpecification)
             .when()
             .header(new Header("Authorization", caseDataFixture.getLegalRepToken()))
             .header(new Header("ServiceAuthorization", serviceToken))
             .contentType("application/json")
             .body("{\"ccd_case_numbers\":["
-                  + cases
-                  + "]}")
+                      + cases
+                      + "]}")
             .post("/supplementary-details")
             .then()
             .extract()
             .response();
+        return response;
     }
 
     private String caseListAsString(List<String> ccdCaseNumbers, String delimiter) {
