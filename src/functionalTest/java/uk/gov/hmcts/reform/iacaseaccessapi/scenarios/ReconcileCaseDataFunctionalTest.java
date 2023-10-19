@@ -182,7 +182,7 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
     }
 
     private Response supplementaryDetails(String cases, String serviceToken) {
-        Response response = given(requestSpecification)
+        return given(requestSpecification)
             .when()
             .header(new Header("Authorization", caseDataFixture.getLegalRepToken()))
             .header(new Header("ServiceAuthorization", serviceToken))
@@ -194,7 +194,6 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
             .then()
             .extract()
             .response();
-        return response;
     }
 
     private String caseListAsString(List<String> ccdCaseNumbers, String delimiter) {
