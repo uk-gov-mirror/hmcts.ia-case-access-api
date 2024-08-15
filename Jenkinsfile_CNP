@@ -65,6 +65,8 @@ withPipeline(type, product, component) {
       reportFiles          : "index.html",
       reportName           : "Unit Test Report"
     ]
+  }
+  afterAlways('integration') {
     publishHTML target: [
       allowMissing         : true,
       alwaysLinkToLastBuild: true,
@@ -73,6 +75,8 @@ withPipeline(type, product, component) {
       reportFiles          : "index.html",
       reportName           : "Integration Test Report"
     ]
+  }
+  afterAlways('dependencyCheckAggregate') {
     publishHTML([
       allowMissing         : true,
       alwaysLinkToLastBuild: true,
