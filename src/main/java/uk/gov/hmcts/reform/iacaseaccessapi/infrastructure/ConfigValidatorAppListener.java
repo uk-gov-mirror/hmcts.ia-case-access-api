@@ -39,7 +39,6 @@ public class ConfigValidatorAppListener implements ApplicationListener<ContextRe
             return;
         }
 
-        log.info("ia.config.validator.secret = {}", iaConfigValidatorSecret);
 
         if (StringUtils.isBlank(iaConfigValidatorSecret)) {
             throw new IllegalArgumentException("ia.config.validator.secret is null or empty."
