@@ -113,7 +113,6 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
     }
 
     private List<SupplementaryInfo> search(String userAuthorisation, String serviceAuthToken, String query) {
-        log.info("ES Query to search bye case references: {}", query);
 
         SearchResult searchResult = coreCaseDataApi.searchCases(
             userAuthorisation,
@@ -133,9 +132,7 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
     }
 
     private SupplementaryInfo extractSupplementaryInfo(CaseDetails caseDetails) {
-        log.info("Case details: {}", caseDetails.toString());
-        log.info("Case data retrieved for caseID {}, caseData: {}", caseDetails.getId(),
-                 caseDetails.getCaseData().toString());
+        // TODO: remove logs after testing
         log.info("Case Data retrieved for caseId {} - surname: {}, caseReferenceNumber: {}",
                  caseDetails.getId(), caseDetails.getCaseData().get(APPELLANT_FAMILY_NAME),
                  caseDetails.getCaseData().get(APPEAL_REFERENCE_NUMBER));
