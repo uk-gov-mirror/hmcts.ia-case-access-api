@@ -132,6 +132,8 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
     }
 
     private SupplementaryInfo extractSupplementaryInfo(CaseDetails caseDetails) {
+        log.info("Case data retrieved for caseID {}, caseData: {}", caseDetails.getId(),
+                 caseDetails.getCaseData().toString());
         log.info("Case Data retrieved for caseId {} - surname: {}, caseReferenceNumber: {}",
                  caseDetails.getId(), caseDetails.getCaseData().get(APPELLANT_FAMILY_NAME),
                  caseDetails.getCaseData().get(APPEAL_REFERENCE_NUMBER));
