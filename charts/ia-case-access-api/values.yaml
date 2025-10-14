@@ -17,9 +17,9 @@ java:
           alias: IA_IDAM_SECRET
         - name: idam-redirect-uri
           alias: IA_IDAM_REDIRECT_URI
-        - name: ia-system-access-username
+        - name: system-username
           alias: IA_SYSTEM_ACCESS_USERNAME
-        - name: ia-system-access-password
+        - name: system-password
           alias: IA_SYSTEM_ACCESS_PASSWORD
         - name: s2s-secret
           alias: idam.s2s-auth.totp_secret
